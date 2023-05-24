@@ -71,6 +71,13 @@ fn build_cli_parser<'a, 'b>() -> App<'a, 'b> {
                 .long("ignore-lockfile")
                 .help("Don't update the lockfile")
         )
+        .arg(
+            Arg::with_name("tag-prefix")
+            .short("t")
+            .long("tag-prefix")
+            .takes_value(true)
+            .help("Optional prefix to the git-tag, this will force the git-tag option")
+        )
 }
 
 pub struct Config {
@@ -78,6 +85,7 @@ pub struct Config {
     pub manifest: PathBuf,
     pub git_tag: bool,
     pub ignore_lockfile: bool,
+    pub prefix: String,
 }
 
 impl Config {
@@ -88,6 +96,7 @@ impl Config {
         let pre_release = matches.value_of("pre-release").map(parse_identifiers);
         let git_tag = matches.is_present("git-tag");
         let ignore_lockfile = matches.is_present("ignore-lockfile");
+        let prefix = matches.value_of("tag-prefix").unwrap_or("").to_owned();
         let mut metadata_cmd = MetadataCommand::new();
         if let Some(path) = matches.value_of("manifest-path") {
             metadata_cmd.manifest_path(path);
@@ -105,6 +114,7 @@ impl Config {
                     .clone(),
                 git_tag,
                 ignore_lockfile,
+                prefix,
             }
         } else {
             panic!("Workspaces are not supported yet.");
