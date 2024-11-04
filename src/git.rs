@@ -1,15 +1,5 @@
 use std::process::Command;
 
-pub fn git_check() {
-    let output = Command::new("git")
-        .args(&["status", "--porcelain"])
-        .output()
-        .expect("This tool requires git. Please install git and try again.");
-    if !output.stdout.is_empty() {
-        panic!("Working directory is not clean. Please commit changes before trying to update the version.");
-    }
-}
-
 pub fn git_tag(version: &str) {
     Command::new("git")
         .args(&["tag", "-am", version, version])

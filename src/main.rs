@@ -23,10 +23,6 @@ fn main() {
     let use_git = conf.git_tag;
     let prefix = conf.prefix;
 
-    if use_git {
-        git::git_check();
-    }
-
     let output = update_toml_with_version(&raw_data, conf.version_modifier);
     let version = output["package"]["version"].as_str().unwrap();
 
